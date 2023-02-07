@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import renewToken from "@services/auth/renewToken";
 
-import { type APIError } from "@src/@types/api";
+import { type APIError } from "@lib/axios";
 import Navigation from "@layouts/navigation";
 
 function App() {
