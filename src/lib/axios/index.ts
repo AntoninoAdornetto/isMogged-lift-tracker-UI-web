@@ -1,4 +1,6 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosError } from "axios";
+
+export type APIError = AxiosError<{ error: string }>;
 
 class AxiosSingleton {
   private static instance: AxiosSingleton;
