@@ -21,7 +21,8 @@ describe(Navigation, () => {
 
   test("Navigation text renders", () => {
     navigationSelections.forEach((v) => {
-      expect(screen.getByText(v.page)).toBeInTheDocument();
+      const link = screen.getByTestId(v.id);
+      expect(link).toHaveTextContent(v.page);
     });
   });
 
