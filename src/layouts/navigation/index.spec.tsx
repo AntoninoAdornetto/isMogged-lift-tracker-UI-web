@@ -3,7 +3,7 @@ import { screen, cleanup } from "@testing-library/react";
 import renderWithProvider from "@utils/renderWithProvider";
 
 import Navigation from "./index";
-import { navigationSelections } from "./routes";
+import { navLinks } from "./routes";
 
 const mockUserID = "0000-0000-0000-00001";
 
@@ -20,7 +20,7 @@ describe(Navigation, () => {
   });
 
   test("Navigation text renders", () => {
-    navigationSelections.forEach((v) => {
+    navLinks.forEach((v) => {
       const link = screen.getByTestId(v.id);
       expect(link).toHaveTextContent(v.page);
     });
@@ -30,7 +30,7 @@ describe(Navigation, () => {
     const links: HTMLAnchorElement[] = screen.getAllByRole("link");
 
     links.forEach((v, i) => {
-      expect(v.href).toContain(navigationSelections[i].href + `/${mockUserID}`);
+      expect(v.href).toContain(navLinks[i].href + `/${mockUserID}`);
     });
   });
 

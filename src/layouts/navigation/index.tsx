@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet, Link } from "react-router-dom";
 
 import Container from "@layouts/container";
-import { navigationSelections } from "./routes";
+import { navLinks } from "./routes";
 
 type NavigationProps = {
   userID: string;
@@ -18,7 +18,7 @@ export default function Navigation({ userID }: NavigationProps) {
       <div data-testid='navigation--container'>
         <nav className='fixed bottom-0 w-screen'>
           <ul className='grid grid-cols-6 text-center text-xs'>
-            {navigationSelections.map(({ href, icon, id, page, styles }) => (
+            {navLinks.map(({ href, icon, id, page, styles }) => (
               <li
                 key={page}
                 className={`${styles} pt-2 pb-2 flex flex-col items-center`}
