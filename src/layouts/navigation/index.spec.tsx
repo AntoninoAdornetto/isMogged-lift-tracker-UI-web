@@ -33,4 +33,8 @@ describe(Navigation, () => {
       expect(v.href).toContain(navigationSelections[i].href + `/${mockUserID}`);
     });
   });
+
+  test("Container component renders to display main content", () => {
+    screen.getByTestId("main--container");
+  });
 });
