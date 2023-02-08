@@ -1,9 +1,9 @@
 import React from "react";
 import { useQuery } from "react-query";
-import renewToken from "@services/auth/renewToken";
 
-import { type APIError } from "@lib/axios";
-import Navigation from "@layouts/navigation";
+import { APIError } from "@lib/axios";
+import Navigation from "@layouts/navigation/index";
+import renewToken from "@services/auth/renewToken";
 
 function App() {
   const { data } = useQuery("session", renewToken, {
