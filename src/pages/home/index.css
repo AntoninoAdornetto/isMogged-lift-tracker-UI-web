@@ -1,5 +1,5 @@
 .hero--container {
-  background-image: url("../../../public/images/hero.jpg");
+  background-image: url("/images/hero.jpg");
   background-position: center;
   background-size: cover;
 }
