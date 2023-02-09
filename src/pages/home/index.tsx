@@ -18,8 +18,8 @@ const Home: React.FC = () => {
 
   return (
     <Container className='hero--container'>
-      <div className='flex justify-center items-center h-full w-full'>
-        <Card className='home--card mr-5 ml-5' footer={footer} title='isMogged'>
+      <div className='flex justify-center items-center h-full'>
+        <Card className='mr-5 ml-5' footer={footer} title='Ready to mog?'>
           <p className='m-0'>
             Pull up your huggies, grab your oven mitt and get ready to set some PRs
           </p>
