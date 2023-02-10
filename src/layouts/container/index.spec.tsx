@@ -4,8 +4,8 @@ import { cleanup, render, screen } from "@testing-library/react";
 
 function init() {
   render(
-    <Container>
-      <div data-testid='container--content'>Container</div>
+    <Container id='main--container'>
+      <div>Content</div>
     </Container>
   );
 }
@@ -19,6 +19,6 @@ describe(Container, () => {
   });
 
   test("Children render", () => {
-    screen.getByTestId("container--content");
+    screen.getByText("Content");
   });
 });
