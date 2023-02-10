@@ -11,7 +11,7 @@ type NavigationProps = {
 export default function Navigation({ userID }: NavigationProps) {
   return (
     <>
-      <Container>
+      <Container id='main--container'>
         <Outlet />
       </Container>
 
