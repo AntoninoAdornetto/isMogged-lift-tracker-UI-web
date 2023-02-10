@@ -6,6 +6,7 @@ import { APIError } from "@lib/axios";
 import Navigation from "@layouts/navigation";
 import Home from "@pages/home";
 import renewToken from "@services/auth/renewToken";
+
 const _10MIN_MS = 600000 as const;
 
 function App() {
