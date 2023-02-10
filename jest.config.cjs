@@ -14,6 +14,7 @@ module.exports = {
     "^@pages(.*)$": "<rootDir>/src/pages/$1",
     "^@utils(.*)$": "<rootDir>/src/utils/$1",
     "^@services(.*)$": "<rootDir>/src/services/$1",
+    "\\.css": "identity-obj-proxy",
   },
   testEnvironment: "jest-environment-jsdom",
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
