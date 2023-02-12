@@ -3,7 +3,7 @@ import { act, cleanup, screen, waitFor } from "@testing-library/react";
 
 import App from "@src/App";
 import axios from "@lib/axios";
-import * as renewToken from "@services/auth/renewToken";
+import * as service from "@services/auth/renewToken";
 import renderWithProvider from "@utils/renderWithProvider";
 
 function init() {
@@ -15,7 +15,7 @@ describe(App, () => {
   afterEach(cleanup);
 
   test("App/navigation is displayed during active session", async () => {
-    const renewSpy = jest.spyOn(renewToken, "default");
+    const renewSpy = jest.spyOn(service, "renewToken");
     renewSpy.mockResolvedValueOnce({
       access_token: "eyJhbGciOiJIUzI",
       access_token_expires_at: `${new Date().getTime() + 5000}`,
