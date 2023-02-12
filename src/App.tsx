@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import Navigation from "@layouts/navigation";
 import Home from "@pages/home";
@@ -13,6 +14,7 @@ function App() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data } = useQuery("session", renewToken, {
+    enabled: !!Cookies.get("session_id"),
     retry: false,
     refetchInterval: _10MIN_MS,
     refetchOnWindowFocus: false,
