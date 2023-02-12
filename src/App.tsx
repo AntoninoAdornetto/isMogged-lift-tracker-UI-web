@@ -2,10 +2,10 @@ import React from "react";
 import { useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { APIError } from "@lib/axios";
 import Navigation from "@layouts/navigation";
 import Home from "@pages/home";
-import renewToken from "@services/auth/renewToken";
+import { renewToken } from "@services/auth/renewToken";
+import { handleHttpException } from "@utils/handleHttpException";
 
 const _10MIN_MS = 600000 as const;
 
@@ -15,10 +15,10 @@ function App() {
   const { data } = useQuery("session", renewToken, {
     retry: false,
     refetchInterval: _10MIN_MS,
+    refetchOnWindowFocus: false,
     onError(err) {
-      const error = err as APIError;
-      console.error(error.response?.data.error);
-      return error.response?.data.error;
+      console.error(handleHttpException(err));
+      if (pathname !== "/") navigate("/");
     },
   });
 
