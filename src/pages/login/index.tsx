@@ -93,9 +93,7 @@ const Login = () => {
                 value={loginForm.values.email}
                 onChange={loginForm.handleChange}
               />
-              <label className='' htmlFor='email'>
-                Email*
-              </label>
+              <label htmlFor='email'>Email*</label>
             </span>
             {getErrorMessage("email")}
           </div>
@@ -103,7 +101,6 @@ const Login = () => {
           <div className='mb-5'>
             <span className='p-float-label'>
               <InputText
-                autoFocus
                 className={classNames({ "p-invalid": isFormFieldValid("password") })}
                 data-testid='password--input'
                 id='password'
@@ -121,8 +118,8 @@ const Login = () => {
 
           <Button
             className={classNames({
-              "p-button-info": !loginForm.errors.email || !loginForm.errors.password,
-              "p-button-danger": loginForm.errors.email || loginForm.errors.password,
+              "p-button-info": loginForm.isValid,
+              "p-button-danger": !loginForm.isValid,
             })}
             label='Login'
             loading={login.isLoading}
