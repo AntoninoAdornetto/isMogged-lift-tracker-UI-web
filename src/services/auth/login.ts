@@ -1,12 +1,12 @@
 import axios from "@lib/axios/";
 import { AxiosResponse } from "axios";
 
-type loginRequest = {
+export type loginRequest = {
   email: string;
   password: string;
 };
 
-type loginResponse = {
+export type loginResponse = {
   user: {
     user_id: string;
     email: string;
