@@ -7,7 +7,7 @@ type renewResponse = {
   user_id: string;
 };
 
-export default async function renewToken() {
+export async function renewToken() {
   const { data }: AxiosResponse<renewResponse> = await axios.request({
     url: "/token/renew",
     method: "post",
