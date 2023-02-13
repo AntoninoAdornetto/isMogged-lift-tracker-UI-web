@@ -27,10 +27,8 @@ export default function App() {
       console.error(handleHttpException(err));
       navigate("/home");
     },
-    onSuccess() {
-      navigate("/dashboard/".concat(userID));
-    },
   });
 
+  // When dashboard page is built, place below along with nav
   return <Navigation userID={userID} />;
 }
