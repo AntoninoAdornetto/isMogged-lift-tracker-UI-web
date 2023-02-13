@@ -1,23 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FormikTouched, useFormik } from "formik";
 import { classNames } from "primereact/utils";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 import { Navigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { useMutation } from "react-query";
+import Cookies from "js-cookie";
 
 import { createAccount, createAccountRequest } from "@services/account/createAccount";
+import { userLogin } from "@services/auth/login";
 import { handleHttpException } from "@utils/handleHttpException";
 
 type createAccountRequiredFields = Pick<createAccountRequest, "email" | "password" | "name">;
 
 const Register: React.FC = () => {
-  const [requestMessage, setRequestMessage] = useState("");
+  const [userID, setUserID] = useState<string | null>(null);
+  const toast = useRef<Toast>(null);
 
   const register = useMutation(createAccount, {
     onError(err) {
-      setRequestMessage(JSON.stringify(handleHttpException(err)));
-      console.error(requestMessage);
+      const error = JSON.stringify(handleHttpException(err));
+      toast.current?.show({ severity: "error", detail: error, life: 3000 });
+      console.error(error);
     },
   });
 
@@ -57,12 +62,26 @@ const Register: React.FC = () => {
     return isFormFieldValid(name) && <small className='p-error'>{registerForm.errors[name]}</small>;
   };
 
-  if (register.isSuccess) {
-    return <Navigate to={`/dashboard/${register.data.id}`} replace={true} />;
+  useEffect(() => {
+    if (!register.isSuccess) return;
+
+    (async () => {
+      const res = await userLogin(registerForm.values);
+      Cookies.set("user_id", res.user.user_id, {
+        expires: new Date(res.session.refresh_token_expires_at),
+        sameSite: "Strict",
+      });
+      setUserID(res.user.user_id);
+    })();
+  }, [register.isSuccess]);
+
+  if (userID) {
+    return <Navigate to={"/"} replace={true} />;
   }
 
   return (
     <div className='min-h-screen flex flex-col items-center justify-center'>
+      <Toast ref={toast} position='top-center' />
       <div className='w-3/4'>
         <form className='p-fluid' data-testid='register--form' onSubmit={registerForm.handleSubmit}>
           <div className='mb-5'>
