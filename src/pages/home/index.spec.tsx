@@ -7,7 +7,7 @@ import renderWithProvider from "@utils/renderWithProvider";
 const redirectSpy = jest.fn();
 
 function init() {
-  renderWithProvider(<Home handleRedirect={redirectSpy} />);
+  renderWithProvider(<Home navigate={redirectSpy} />);
 }
 
 describe(Home, () => {
