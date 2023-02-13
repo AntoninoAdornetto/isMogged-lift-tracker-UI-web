@@ -4,25 +4,28 @@ import { Button } from "primereact/button";
 
 import Container from "@layouts/container";
 import "./index.css";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
-type HomeProps = {
-  handleRedirect: (route: "/login" | "/register") => void;
-};
+interface HomeProps {
+  navigate?: NavigateFunction;
+}
 
-const Home: React.FC<HomeProps> = ({ handleRedirect }) => {
+export default function Home({ navigate }: HomeProps) {
+  const redirect = navigate ? navigate : useNavigate();
+
   const footer = (
     <div className='flex justify-around'>
       <Button
         data-testid='registerBtn'
         label='Register'
         className='w-1/3'
-        onClick={() => handleRedirect("/register")}
+        onClick={() => redirect("/register")}
       />
       <Button
         data-testid='loginBtn'
         label='Login'
         className='w-1/3'
-        onClick={() => handleRedirect("/login")}
+        onClick={() => redirect("/login")}
       />
     </div>
   );
@@ -38,6 +41,4 @@ const Home: React.FC<HomeProps> = ({ handleRedirect }) => {
       </div>
     </Container>
   );
-};
-
-export default Home;
+}

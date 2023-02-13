@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { FormikTouched, useFormik } from "formik";
 import { useMutation } from "react-query";
 import { Navigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
 
 import { userLogin } from "@services/auth/login";
 import { handleHttpException } from "@utils/handleHttpException";
 
 const Login = () => {
-  const [requestMessage, setRequestMessage] = useState("");
+  const toast = useRef<Toast>(null);
 
   const login = useMutation(userLogin, {
     onError(err) {
-      setRequestMessage(handleHttpException(err));
+      toast.current?.show({ severity: "error", detail: handleHttpException(err), life: 3000 });
+    },
+    onSuccess(data) {
+      Cookies.set("user_id", data.user.user_id, {
+        expires: new Date(data.session.refresh_token_expires_at),
+        sameSite: "Strict",
+      });
     },
   });
 
@@ -52,33 +59,12 @@ const Login = () => {
   };
 
   if (login.isSuccess) {
-    return <Navigate to={`/dashboard/${login.data.user.user_id}`} replace={true} />;
+    return <Navigate to={"/"} replace={true} />;
   }
 
   return (
     <div className='min-h-screen flex flex-col items-center justify-center'>
-      <Dialog
-        visible={!!requestMessage}
-        position='top'
-        showHeader={true}
-        onHide={() => setRequestMessage("")}
-      >
-        <div className='flex justify-evenly'>
-          <i
-            className={classNames({
-              pi: true,
-              "pi-check-circle": login.isSuccess,
-              "pi-times-circle": login.isError,
-              "pr-2": true,
-            })}
-            style={{
-              fontSize: "2rem",
-              color: `var(--${login.isSuccess ? "green" : "red"}-500)`,
-            }}
-          ></i>
-          <span className='pb-10 pr-5 pl-5'>{requestMessage}</span>
-        </div>
-      </Dialog>
+      <Toast ref={toast} position='top-center' />
 
       <div className='w-3/4'>
         <form className='p-fluid' data-testid='login--form' onSubmit={loginForm.handleSubmit}>
@@ -93,9 +79,7 @@ const Login = () => {
                 value={loginForm.values.email}
                 onChange={loginForm.handleChange}
               />
-              <label className='' htmlFor='email'>
-                Email*
-              </label>
+              <label htmlFor='email'>Email*</label>
             </span>
             {getErrorMessage("email")}
           </div>
@@ -103,7 +87,6 @@ const Login = () => {
           <div className='mb-5'>
             <span className='p-float-label'>
               <InputText
-                autoFocus
                 className={classNames({ "p-invalid": isFormFieldValid("password") })}
                 data-testid='password--input'
                 id='password'
@@ -121,8 +104,8 @@ const Login = () => {
 
           <Button
             className={classNames({
-              "p-button-info": !loginForm.errors.email || !loginForm.errors.password,
-              "p-button-danger": loginForm.errors.email || loginForm.errors.password,
+              "p-button-info": loginForm.isValid,
+              "p-button-danger": !loginForm.isValid,
             })}
             label='Login'
             loading={login.isLoading}
