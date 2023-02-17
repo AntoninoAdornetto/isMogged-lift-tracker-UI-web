@@ -5,6 +5,7 @@ import App from "@src/App";
 import Home from "@pages/home";
 import Login from "@pages/login";
 import Register from "@pages/register";
+import Exercise from "@pages/exercise";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/exercise/:user_id",
-        element: <div>Exercises</div>,
+        element: <Exercise />,
       },
 
       {
