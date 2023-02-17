@@ -14,7 +14,7 @@ import { handleHttpException } from "@utils/handleHttpException";
 
 type createAccountRequiredFields = Pick<createAccountRequest, "email" | "password" | "name">;
 
-const Register: React.FC = () => {
+export default function Register() {
   const [userID, setUserID] = useState<string | null>(null);
   const toast = useRef<Toast>(null);
 
@@ -147,6 +147,4 @@ const Register: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Register;
+}
