@@ -1,20 +1,15 @@
 import axios from "@lib/axios";
 import { AxiosResponse } from "axios";
 
+import { exercise } from "./createExercise";
+
 type listExercisesRequest = {
   page: number;
   pageSize: number;
 };
 
-export type listExercisesResponse = {
-  id: number;
-  name: string;
-  muscle_group: string;
-  category: string;
-};
-
 export async function listExercises(query: listExercisesRequest) {
-  const { data }: AxiosResponse<listExercisesResponse[]> = await axios.request({
+  const { data }: AxiosResponse<exercise[]> = await axios.request({
     url: "/exercise",
     params: {
       page_size: query.pageSize,
