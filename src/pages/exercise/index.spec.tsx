@@ -21,16 +21,19 @@ function init() {
 }
 
 describe(Exercises, () => {
-  test("Exercise page renders", () => {
+  let listExercisesSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    listExercisesSpy = jest.spyOn(listExercises, "listExercises");
+    listExercisesSpy.mockResolvedValue(mockData);
     init();
+  });
+
+  test("Exercise page renders", () => {
     screen.getByTestId("exercisePage");
   });
 
   test("Exercises render in data table", async () => {
-    const listExercisesSpy = jest.spyOn(listExercises, "listExercises");
-    listExercisesSpy.mockResolvedValueOnce(mockData);
-    init();
-
     await waitFor(() => {
       mockData.forEach((e) => {
         screen.getByText(e.name);
@@ -40,14 +43,10 @@ describe(Exercises, () => {
     });
   });
 
-  test("When user queries for an exercise name, the results will populate in data table", async () => {
-    const listExercisesSpy = jest.spyOn(listExercises, "listExercises");
-    listExercisesSpy.mockResolvedValueOnce(mockData);
-    init();
-
+  test("When user queries for an exercise name, only the results will populate in data table", async () => {
     const filterInput = screen.getByTestId("exerciseFilterInput") as HTMLInputElement;
-    const selectedIndex = 1;
-    const filteredExercise = mockData[selectedIndex];
+    const filterIndex = 1;
+    const filteredExercise = mockData[filterIndex];
     const query = filteredExercise.name;
     fireEvent.change(filterInput, { target: { value: query } });
 
@@ -55,7 +54,7 @@ describe(Exercises, () => {
       expect(filterInput.value).toBe(query);
 
       mockData.forEach((data, index) => {
-        if (selectedIndex !== index) {
+        if (filterIndex !== index) {
           expect(screen.queryByText(data.category)).toBeNull();
           expect(screen.queryByText(data.muscle_group)).toBeNull();
           expect(screen.queryByText(data.name)).toBeNull();
@@ -65,6 +64,27 @@ describe(Exercises, () => {
           screen.getByText(data.name);
         }
       });
+    });
+  });
+
+  test("Edit exercise form is displayed to the user when they click on an exercise", async () => {
+    const firstExercise = mockData[0];
+
+    await waitFor(() => {
+      screen.getByText(firstExercise.name).click();
+    });
+
+    await waitFor(() => {
+      screen.getByTestId("editExerciseForm");
+    });
+  });
+
+  test("Add exercise form is displayed to the user when the plus button is clicked", async () => {
+    const addExerciseBtn = screen.getByTestId("exerciseFilterInput");
+    fireEvent.click(addExerciseBtn);
+
+    await waitFor(() => {
+      screen.getByTestId("addExerciseBtn");
     });
   });
 });
