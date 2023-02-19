@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import axios from "@lib/axios";
 
-type muscleGroup = {
+export type muscleGroup = {
   id: number;
   name: string;
 };

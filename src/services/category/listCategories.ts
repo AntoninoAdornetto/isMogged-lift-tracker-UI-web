@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import axios from "@lib/axios";
 
-type category = {
+export type category = {
   id: number;
   name: string;
 };
