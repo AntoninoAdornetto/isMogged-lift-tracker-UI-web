@@ -1,28 +1,27 @@
 import React, { useState, useRef } from "react";
-import { useQuery, useMutation } from "react-query";
-import { useFormik } from "formik";
+import { useQuery } from "react-query";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableRowClickEventParams } from "primereact/datatable";
-// import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { FilterMatchMode } from "primereact/api";
-// import { classNames } from "primereact/utils";
 
-import { createExercise, exercise, listExercises } from "@services/exercise";
+import { exercise, listExercises } from "@services/exercise";
 import { listMuscleGroups } from "@services/muscle_group/listMuscleGroups";
 import { listCategories } from "@services/category/listCategories";
 import { handleHttpException } from "@utils/handleHttpException";
 import AddExerciseForm from "./forms/AddExercise";
+import EditExercise from "./forms/EditExercise";
 
 export default function Exercises() {
   const [action, setAction] = useState<"edit" | "add" | "query">("query");
-  const [isVisible, setIsVisible] = useState(false);
   const [exerciseNameFilterValue, setExerciseNameFilterValue] = useState("");
   const [page] = useState(1);
   const [pageSize] = useState(50);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<exercise>();
   const [filters, setFilters] = useState({
     global: {
       value: "",
@@ -30,12 +29,6 @@ export default function Exercises() {
     },
   });
   const toast = useRef<Toast>(null);
-
-  const newExercise = useMutation(createExercise, {
-    onError(err) {
-      toast.current?.show({ severity: "error", detail: handleHttpException(err), life: 3000 });
-    },
-  });
 
   const {
     data: exercises,
@@ -75,9 +68,8 @@ export default function Exercises() {
     setAction("edit");
     setIsVisible(true);
 
-    // open dialog modal to display form to user to edit the exercise and see more about it
-    const { id, category, muscle_group, name }: exercise = e.data;
-    console.log(id, category, muscle_group, name);
+    const exercise: exercise = e.data;
+    setSelectedExercise(exercise);
   };
 
   const handleAddExercise = () => {
@@ -108,96 +100,27 @@ export default function Exercises() {
     </div>
   );
 
-  const addExercise = useFormik({
-    initialValues: {
-      exerciseName: "",
-      muscleGroup: "",
-      category: "",
-    },
-    validate: (data) => {
-      const errors: Record<string, string> = {};
-
-      if (!data.exerciseName) {
-        errors.exerciseName = "Exercise must have a name";
-      }
-
-      if (!data.muscleGroup) {
-        errors.muscleGroup = "Exercise must have a muscle group";
-      }
-
-      if (!data.category) {
-        errors.category = "Exercise must have a category";
-      }
-
-      return errors;
-    },
-    async onSubmit(data) {
-      await newExercise.mutateAsync({
-        category: data.category,
-        muscle_group: data.muscleGroup,
-        name: data.exerciseName,
-      });
-      await refetch();
-      setIsVisible(false);
-      setAction("query");
-      addExercise.resetForm();
-    },
-  });
-
-  // const addExerciseForm = action === "add" && (
-  //   <form data-testid='addExerciseForm' onSubmit={addExercise.handleSubmit}>
-  //     <div className='flex flex-col'>
-  //       <span className='text-xl mb-5 text-center'>Create new exercise</span>
-  //       <InputText
-  //         className='mb-5 mt-5'
-  //         data-testid='addExerciseNameInput'
-  //         id='exerciseName'
-  //         name='exerciseName'
-  //         placeholder='Exercise Name'
-  //         onChange={addExercise.handleChange}
-  //         value={addExercise.values.exerciseName}
-  //       />
-  //       <Dropdown
-  //         className='mb-5'
-  //         data-testid='addExerciseMuscleGroupDropdown'
-  //         id='muscleGroup'
-  //         name='muscleGroup'
-  //         placeholder='Muscle group'
-  //         onChange={addExercise.handleChange}
-  //         options={muscleGroups}
-  //         optionLabel='name'
-  //         optionValue='name'
-  //         value={addExercise.values.muscleGroup}
-  //       />
-  //       <Dropdown
-  //         className='mb-5'
-  //         data-testid='addExerciseCategoriesDropdown'
-  //         id='category'
-  //         name='category'
-  //         placeholder='Category'
-  //         onChange={addExercise.handleChange}
-  //         options={categories}
-  //         optionLabel='name'
-  //         optionValue='name'
-  //         value={addExercise.values.category}
-  //       />
-  //       <Button
-  //         className={classNames({
-  //           "p-button-info": addExercise.isValid,
-  //           "p-button-danger": !addExercise.isValid,
-  //           "mt-5": true,
-  //         })}
-  //         disabled={!addExercise.isValid}
-  //         label='Save'
-  //         loading={newExercise.isLoading}
-  //         type='submit'
-  //         data-testid='createExerciseSubmitBtn'
-  //       />
-  //     </div>
-  //   </form>
-  // );
+  const dialogHeader = <span>{action === "add" ? "Add" : "Edit"} Exercise</span>;
 
   const handleHideDialog = () => {
+    setIsVisible(false);
+    setAction("query");
+  };
+
+  const handleAddExerciseError = (err: unknown) => {
+    toast.current?.show({ severity: "error", detail: handleHttpException(err), life: 3000 });
+  };
+
+  const handleAddExerciseSuccess = (data: exercise) => {
+    toast.current?.show({
+      severity: "success",
+      detail: `Added new exercise ${data.name}`,
+      life: 3000,
+    });
+  };
+
+  const handleCleanup = async () => {
+    await refetch();
     setIsVisible(false);
     setAction("query");
   };
@@ -205,17 +128,21 @@ export default function Exercises() {
   return (
     <>
       <Toast ref={toast} position='top-center' />
-      <Dialog onHide={handleHideDialog} visible={isVisible}>
-        {action === "edit" && <form data-testid='editExerciseForm'>Edit Exercise</form>}
-        {/* {addExerciseForm} */}
+      <Dialog onHide={handleHideDialog} visible={isVisible} header={dialogHeader}>
+        {action === "edit" && (
+          <EditExercise
+            categories={categories || []}
+            exercise={selectedExercise!}
+            muscleGroups={muscleGroups || []}
+          />
+        )}
+
         {action === "add" && (
           <AddExerciseForm
             categories={categories || []}
-            cleanup={async () => {
-              await refetch();
-              setIsVisible(false);
-              setAction("query");
-            }}
+            cleanup={handleCleanup}
+            handleError={handleAddExerciseError}
+            handleSuccess={handleAddExerciseSuccess}
             muscleGroups={muscleGroups || []}
           />
         )}
