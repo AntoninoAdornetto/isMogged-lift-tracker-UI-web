@@ -6,29 +6,35 @@ import { classNames } from "primereact/utils";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 
-import { createExercise } from "@services/exercise";
+import { createExercise, exercise } from "@services/exercise";
 import { category } from "@services/category/listCategories";
 import { muscleGroup } from "@services/muscle_group/listMuscleGroups";
-// import { handleHttpException } from "@utils/handleHttpException";
 
 interface AddExerciseFormProps {
   categories: category[];
   muscleGroups: muscleGroup[];
   cleanup: () => Promise<void>;
+  handleError: (err: unknown) => void;
+  handleSuccess: (data: exercise) => void;
 }
 
 export default function AddExerciseForm({
   categories,
-  muscleGroups,
   cleanup,
+  handleError,
+  handleSuccess,
+  muscleGroups,
 }: AddExerciseFormProps) {
   const newExercise = useMutation(createExercise, {
-    // onError(err) {
-    //   toast.current?.show({ severity: "error", detail: handleHttpException(err), life: 3000 });
-    // },
+    onError(err) {
+      handleError(err);
+    },
+    onSuccess(data) {
+      handleSuccess(data);
+    },
   });
 
-  const addExercise = useFormik({
+  const form = useFormik({
     initialValues: {
       exerciseName: "",
       muscleGroup: "",
@@ -60,22 +66,21 @@ export default function AddExerciseForm({
 
       await cleanup();
 
-      addExercise.resetForm();
+      form.resetForm();
     },
   });
 
   return (
-    <form data-testid='addExerciseForm' onSubmit={addExercise.handleSubmit}>
+    <form data-testid='addExerciseForm' onSubmit={form.handleSubmit}>
       <div className='flex flex-col'>
-        <span className='text-xl mb-5 text-center'>Create new exercise</span>
         <InputText
           className='mb-5 mt-5'
           data-testid='addExerciseNameInput'
           id='exerciseName'
           name='exerciseName'
           placeholder='Exercise Name'
-          onChange={addExercise.handleChange}
-          value={addExercise.values.exerciseName}
+          onChange={form.handleChange}
+          value={form.values.exerciseName}
         />
         <Dropdown
           className='mb-5'
@@ -83,31 +88,30 @@ export default function AddExerciseForm({
           id='muscleGroup'
           name='muscleGroup'
           placeholder='Muscle group'
-          onChange={addExercise.handleChange}
+          onChange={form.handleChange}
           options={muscleGroups}
           optionLabel='name'
           optionValue='name'
-          value={addExercise.values.muscleGroup}
+          value={form.values.muscleGroup}
         />
         <Dropdown
           className='mb-5'
-          data-testid='addExerciseCategoriesDropdown'
+          data-testid='addExerciseCategoryDropdown'
           id='category'
           name='category'
           placeholder='Category'
-          onChange={addExercise.handleChange}
+          onChange={form.handleChange}
           options={categories}
           optionLabel='name'
           optionValue='name'
-          value={addExercise.values.category}
+          value={form.values.category}
         />
         <Button
           className={classNames({
-            "p-button-info": addExercise.isValid,
-            "p-button-danger": !addExercise.isValid,
+            "p-button-info": form.isValid,
+            "p-button-danger": !form.isValid,
             "mt-5": true,
           })}
-          disabled={!addExercise.isValid}
           label='Save'
           loading={newExercise.isLoading}
           type='submit'
