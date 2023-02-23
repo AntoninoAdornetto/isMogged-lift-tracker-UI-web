@@ -18,8 +18,6 @@ import EditExercise from "./forms/EditExercise";
 export default function Exercises() {
   const [action, setAction] = useState<"edit" | "add" | "query">("query");
   const [exerciseNameFilterValue, setExerciseNameFilterValue] = useState("");
-  const [page] = useState(1);
-  const [pageSize] = useState(50);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<exercise>();
   const [filters, setFilters] = useState({
@@ -34,7 +32,7 @@ export default function Exercises() {
     data: exercises,
     isLoading,
     refetch,
-  } = useQuery(["listExercises", page, pageSize], () => listExercises({ page, pageSize }), {
+  } = useQuery("listExercises", listExercises, {
     refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
