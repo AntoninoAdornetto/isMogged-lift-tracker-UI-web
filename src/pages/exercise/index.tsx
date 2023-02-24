@@ -5,13 +5,12 @@ import { Column } from "primereact/column";
 import { DataTable, DataTableRowClickEventParams } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Toast } from "primereact/toast";
+import { Toast, ToastMessage } from "primereact/toast";
 import { FilterMatchMode } from "primereact/api";
 
 import { exercise, listExercises } from "@services/exercise";
 import { listMuscleGroups } from "@services/muscle_group/listMuscleGroups";
 import { listCategories } from "@services/category/listCategories";
-import { handleHttpException } from "@utils/handleHttpException";
 import AddExerciseForm from "./forms/AddExercise";
 import EditExercise from "./forms/EditExercise";
 
@@ -82,7 +81,7 @@ export default function Exercises() {
           <i className='pi pi-search' />
           <InputText
             data-testid='exerciseFilterInput'
-            placeholder='Keyword search'
+            placeholder='Filter by exercise name'
             onChange={handleSearch}
             value={exerciseNameFilterValue}
           />
@@ -105,22 +104,18 @@ export default function Exercises() {
     setAction("query");
   };
 
-  const handleAddExerciseError = (err: unknown) => {
-    toast.current?.show({ severity: "error", detail: handleHttpException(err), life: 3000 });
+  const handleSuccess = async (args: ToastMessage) => {
+    toast.current?.show(args);
+    await handleCleanup();
   };
 
-  const handleAddExerciseSuccess = (data: exercise) => {
-    toast.current?.show({
-      severity: "success",
-      detail: `Added new exercise ${data.name}`,
-      life: 3000,
-    });
+  const handleError = (args: ToastMessage) => {
+    toast.current?.show(args);
   };
 
   const handleCleanup = async () => {
     await refetch();
-    setIsVisible(false);
-    setAction("query");
+    handleHideDialog();
   };
 
   return (
@@ -132,15 +127,15 @@ export default function Exercises() {
             categories={categories || []}
             exercise={selectedExercise!}
             muscleGroups={muscleGroups || []}
+            handleError={handleError}
+            handleSuccess={handleSuccess}
           />
         )}
-
         {action === "add" && (
           <AddExerciseForm
             categories={categories || []}
-            cleanup={handleCleanup}
-            handleError={handleAddExerciseError}
-            handleSuccess={handleAddExerciseSuccess}
+            handleError={handleError}
+            handleSuccess={handleSuccess}
             muscleGroups={muscleGroups || []}
           />
         )}
