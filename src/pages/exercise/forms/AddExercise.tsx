@@ -5,32 +5,36 @@ import { Button } from "primereact/button";
 import { classNames } from "primereact/utils";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
+import { ToastMessage } from "primereact/toast";
 
-import { createExercise, exercise } from "@services/exercise";
+import { createExercise } from "@services/exercise";
 import { category } from "@services/category/listCategories";
 import { muscleGroup } from "@services/muscle_group/listMuscleGroups";
+import { handleHttpException } from "@utils/handleHttpException";
 
 interface AddExerciseFormProps {
   categories: category[];
   muscleGroups: muscleGroup[];
-  cleanup: () => Promise<void>;
-  handleError: (err: unknown) => void;
-  handleSuccess: (data: exercise) => void;
+  handleError: (args: ToastMessage) => void;
+  handleSuccess: (args: ToastMessage) => Promise<void>;
 }
 
 export default function AddExerciseForm({
   categories,
-  cleanup,
   handleError,
   handleSuccess,
   muscleGroups,
 }: AddExerciseFormProps) {
   const newExercise = useMutation(createExercise, {
     onError(err) {
-      handleError(err);
+      handleError({ detail: handleHttpException(err), life: 3500, severity: "error" });
     },
-    onSuccess(data) {
-      handleSuccess(data);
+    async onSuccess(data) {
+      await handleSuccess({
+        detail: `Added ${data.name} to exercise data base`,
+        life: 3500,
+        severity: "success",
+      });
     },
   });
 
@@ -63,9 +67,6 @@ export default function AddExerciseForm({
         muscle_group: data.muscleGroup,
         name: data.exerciseName,
       });
-
-      await cleanup();
-
       form.resetForm();
     },
   });
