@@ -1,61 +1,70 @@
-import React, { useState } from "react";
-import { useMutation } from "react-query";
+import React, { useRef, useState } from "react";
+import { useMutation, useQuery } from "react-query";
 import { useFormik } from "formik";
 import { Button } from "primereact/button";
 import { classNames } from "primereact/utils";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
+import { Toast } from "primereact/toast";
 
-import { deleteExercise, exercise, updateExercise } from "@services/exercise";
+import { deleteExercise, exercise, updateExercise, listExercises } from "@services/exercise";
 import { category } from "@services/category/listCategories";
 import { muscleGroup } from "@services/muscle_group/listMuscleGroups";
-import { ToastMessage } from "primereact/toast";
 import { handleHttpException } from "@utils/handleHttpException";
 
 interface EditExerciseFormProps {
   categories: category[];
   exercise: exercise;
   muscleGroups: muscleGroup[];
-  handleError: (args: ToastMessage) => void;
-  handleSuccess: (args: ToastMessage) => Promise<void>;
+  onEdit: () => void;
 }
 
 export default function EditExerciseForm({
   categories,
   exercise,
-  handleError,
-  handleSuccess,
   muscleGroups,
+  onEdit,
 }: EditExerciseFormProps) {
+  const toast = useRef<Toast>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const { category, muscle_group, name, id } = exercise;
 
+  const { refetch } = useQuery("listExercises", listExercises, {
+    enabled: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+
   const editExercise = useMutation(updateExercise, {
     onError(error) {
-      handleError({ detail: handleHttpException(error), life: 3500, severity: "error" });
+      toast.current?.show({ detail: handleHttpException(error), life: 3500, severity: "error" });
     },
     async onSuccess() {
-      await handleSuccess({
+      toast.current?.show({
         detail: `Successfully edited ${name}`,
         life: 3500,
         severity: "success",
       });
+      await refetch();
+      onEdit();
     },
   });
 
   const deleteExerciseReq = useMutation(deleteExercise, {
     onError(error) {
-      handleError({ detail: handleHttpException(error), life: 3500, severity: "error" });
+      toast.current?.show({ detail: handleHttpException(error), life: 3500, severity: "error" });
     },
     async onSuccess() {
-      setIsDeleteModalVisible(false);
-      await handleSuccess({
+      toast.current?.show({
         detail: `Successfully deleted ${name}`,
         life: 3500,
         severity: "success",
       });
+      await refetch();
+      setIsDeleteModalVisible(false);
+      onEdit();
     },
   });
 
@@ -79,6 +88,7 @@ export default function EditExerciseForm({
 
   return (
     <>
+      <Toast ref={toast} />
       <Dialog
         onHide={() => setIsDeleteModalVisible(false)}
         visible={isDeleteModalVisible}
