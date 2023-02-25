@@ -5,7 +5,7 @@ import { exercise } from "./createExercise";
 
 export async function listExercises() {
   const { data }: AxiosResponse<exercise[]> = await axios.request({
-    url: "/exercise",
+    url: "/listExercises",
   });
   return data;
 }
