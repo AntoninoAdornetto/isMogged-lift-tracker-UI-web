@@ -78,7 +78,7 @@ export default function AddExerciseForm() {
 
   return (
     <>
-      <Toast />
+      <Toast ref={toast} />
       <form data-testid='addExerciseForm' onSubmit={form.handleSubmit}>
         <div className='flex flex-col'>
           <InputText
