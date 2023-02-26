@@ -9,7 +9,7 @@ import { Header } from "./Header";
 import { exercise } from "@services/exercise";
 import { listExercisesBy } from "@services/muscle_group";
 
-type ExerciseTableProps = {
+export type ExerciseTableProps = {
   exercises: exercise[];
   isLoading: boolean;
   onExerciseSelection: (e: DataTableRowClickEventParams) => void;
