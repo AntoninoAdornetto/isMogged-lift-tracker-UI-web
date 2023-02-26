@@ -7,7 +7,7 @@ import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
 import { listMuscleGroups } from "@services/muscle_group/listMuscleGroups";
 import AddExerciseForm from "@src/pages/exercise/forms/AddExercise";
 
-type HeaderProps = {
+export type HeaderProps = {
   filteredMuscleGroup: string;
   keyword: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -33,7 +33,7 @@ export function Header({
               <i className='pi pi-search' />
               <InputText
                 className='w-full'
-                data-testid='exerciseFilterInput'
+                data-testid='exerciseNameFilterInput'
                 placeholder='Search by exercise name'
                 onChange={onChange}
                 value={keyword}
