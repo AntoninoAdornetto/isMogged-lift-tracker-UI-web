@@ -97,6 +97,7 @@ export default function EditExerciseForm({
         <div className='text-center p-5'>
           <Button
             className='p-button-danger'
+            data-testid='confirmDelteExerciseBtn'
             label='Confirm'
             onClick={async () => await deleteExerciseReq.mutateAsync(id)}
           />
