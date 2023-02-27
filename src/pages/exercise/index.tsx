@@ -57,7 +57,7 @@ export default function Exercises() {
           categories={categories || []}
           exercise={selectedExercise}
           muscleGroups={muscleGroups || []}
-          onEdit={handleHide}
+          onDefer={handleHide}
         />
       </Dialog>
     </>
