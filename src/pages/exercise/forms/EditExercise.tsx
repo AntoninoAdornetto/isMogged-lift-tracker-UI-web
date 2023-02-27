@@ -13,18 +13,18 @@ import { category } from "@services/category/listCategories";
 import { muscleGroup } from "@services/muscle_group/listMuscleGroups";
 import { handleHttpException } from "@utils/handleHttpException";
 
-interface EditExerciseFormProps {
+export type EditExerciseFormProps = {
   categories: category[];
   exercise: exercise;
   muscleGroups: muscleGroup[];
-  onEdit: () => void;
-}
+  onDefer: () => void;
+};
 
 export default function EditExerciseForm({
   categories,
   exercise,
   muscleGroups,
-  onEdit,
+  onDefer,
 }: EditExerciseFormProps) {
   const toast = useRef<Toast>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -48,7 +48,7 @@ export default function EditExerciseForm({
         severity: "success",
       });
       await refetch();
-      onEdit();
+      onDefer();
     },
   });
 
@@ -64,7 +64,7 @@ export default function EditExerciseForm({
       });
       await refetch();
       setIsDeleteModalVisible(false);
-      onEdit();
+      onDefer();
     },
   });
 
