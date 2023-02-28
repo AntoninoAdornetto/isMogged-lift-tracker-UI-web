@@ -53,12 +53,14 @@ export default function Exercises() {
         onExerciseSelection={handleExerciseSelection}
       />
       <Dialog onHide={handleHide} header='Edit Exercise' visible={isVisible}>
-        <EditExercise
-          categories={categories || []}
-          exercise={selectedExercise}
-          muscleGroups={muscleGroups || []}
-          onDefer={handleHide}
-        />
+        {categories && muscleGroups && (
+          <EditExercise
+            categories={categories}
+            exercise={selectedExercise}
+            muscleGroups={muscleGroups}
+            onDefer={handleHide}
+          />
+        )}
       </Dialog>
     </>
   );
