@@ -154,15 +154,15 @@ describe("Edit Exercise Form", () => {
       onDefer: mockProps.onDefer,
     };
 
-    // const deleteExerciseSpy = jest.spyOn(exerciseService, "deleteExercise");
+    const deleteExerciseSpy = jest.spyOn(exerciseService, "deleteExercise");
     init(newProps);
     fireEvent.click(screen.getByTestId("deleteExerciseSubmitBtn"));
 
     await waitFor(async () => {
       const deleteExerciseBtn = screen.getByTestId("confirmDelteExerciseBtn");
       fireEvent.click(deleteExerciseBtn);
-      // @todo - fix
-      // expect(deleteExerciseSpy).toHaveBeenCalled();
+      expect(deleteExerciseSpy).toHaveBeenCalled();
+      expect(deleteExerciseSpy).toHaveBeenCalledWith(newProps.exercise.id);
     });
   });
 });
