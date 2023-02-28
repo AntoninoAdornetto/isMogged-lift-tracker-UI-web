@@ -74,6 +74,20 @@ export default function EditExerciseForm({
       muscleGroup: muscle_group,
       category,
     },
+    validateOnMount: true,
+    validate(values) {
+      const errors: Record<string, string> = {};
+
+      if (
+        values.exerciseName === name &&
+        values.muscleGroup === muscle_group &&
+        values.category === category
+      ) {
+        errors.noChanges = "please make a change to the form";
+      }
+
+      return errors;
+    },
     async onSubmit(data) {
       editExercise.mutateAsync({
         name: data.exerciseName,
@@ -84,7 +98,9 @@ export default function EditExerciseForm({
     },
   });
 
-  const header = <p>Delete Exercise</p>;
+  const handleDeleteExercise = async () => {
+    await deleteExerciseReq.mutateAsync(id);
+  };
 
   return (
     <>
@@ -92,14 +108,14 @@ export default function EditExerciseForm({
       <Dialog
         onHide={() => setIsDeleteModalVisible(false)}
         visible={isDeleteModalVisible}
-        header={header}
+        header={<p>Delete Exercise</p>}
       >
         <div className='text-center p-5'>
           <Button
             className='p-button-danger'
             data-testid='confirmDelteExerciseBtn'
             label='Confirm'
-            onClick={async () => await deleteExerciseReq.mutateAsync(id)}
+            onClick={handleDeleteExercise}
           />
         </div>
       </Dialog>
@@ -145,6 +161,7 @@ export default function EditExerciseForm({
                 "w-1/2": true,
                 "m-2": true,
               })}
+              disabled={!form.isValid}
               label='Edit'
               loading={editExercise.isLoading}
               type='submit'
