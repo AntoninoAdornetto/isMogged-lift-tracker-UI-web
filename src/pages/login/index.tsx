@@ -12,7 +12,7 @@ import { classNames } from "primereact/utils";
 import { userLogin } from "@services/auth/login";
 import { handleHttpException } from "@utils/handleHttpException";
 
-const Login = () => {
+export default function Login() {
   const toast = useRef<Toast>(null);
 
   const login = useMutation(userLogin, {
@@ -116,6 +116,4 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}
