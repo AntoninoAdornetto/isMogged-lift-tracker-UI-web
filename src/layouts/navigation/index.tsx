@@ -11,12 +11,12 @@ type NavigationProps = {
 export default function Navigation({ userID }: NavigationProps) {
   return (
     <>
-      <Container id='main--container'>
+      <Container id='main--container' styles={{ backgroundColor: "#071426" }}>
         <Outlet />
       </Container>
 
       <div data-testid='navigation--container'>
-        <nav className='fixed bottom-0 w-screen'>
+        <nav className='fixed bottom-0 w-screen' style={{ backgroundColor: "#071426" }}>
           <ul className='grid grid-cols-6 text-center text-xs'>
             {navLinks.map(({ href, icon, id, page, styles }) => (
               <li
