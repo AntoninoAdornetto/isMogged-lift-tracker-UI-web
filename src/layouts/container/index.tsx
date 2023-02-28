@@ -8,7 +8,7 @@ type ContainerProps = {
 
 export default function Container({ children, id, className }: ContainerProps) {
   return (
-    <main data-testid={id} className={`h-screen font-thin ${className}`} id={id}>
+    <main data-testid={id} className={`h-screen font-thin ${className && className}`} id={id}>
       {children}
     </main>
   );
