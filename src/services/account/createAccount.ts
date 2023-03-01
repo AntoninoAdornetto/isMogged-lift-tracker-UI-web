@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import axios from "@lib/axios";
+import { getAccountResponse } from "./getAccount";
 
 export type createAccountRequest = {
   name: string;
@@ -9,17 +10,8 @@ export type createAccountRequest = {
   body_fat?: number;
 };
 
-export type createAccountResponse = {
-  id: string;
-  name: string;
-  email: string;
-  weight: number;
-  body_fat: number;
-  start_date: string;
-};
-
 export async function createAccount(credentials: createAccountRequest) {
-  const { data }: AxiosResponse<createAccountResponse> = await axios.request({
+  const { data }: AxiosResponse<getAccountResponse> = await axios.request({
     url: "/accounts",
     method: "post",
     data: credentials,
