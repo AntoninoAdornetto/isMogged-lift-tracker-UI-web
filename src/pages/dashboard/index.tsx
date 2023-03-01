@@ -22,13 +22,13 @@ export default function Dashboard() {
   }
 
   return (
-    <>
+    <div data-testid='dashboardPage'>
       <Button
         className='p-button-info'
         type='button'
         label='Mog Now'
         onClick={handleNewWorkoutClick}
       />
-    </>
+    </div>
   );
 }
