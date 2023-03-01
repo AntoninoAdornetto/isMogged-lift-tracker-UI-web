@@ -22,10 +22,10 @@ export const navLinks: Navigation[] = [
     icon: "/images/log--link--icon.png",
   },
   {
-    page: "Mog Mode",
+    page: "Dashboard",
     href: "/dashboard",
     styles: "col-span-2",
-    id: "mog--link",
+    id: "dashboard--link",
     icon: "/images/mog--link--icon.png",
   },
   {
