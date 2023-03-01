@@ -30,5 +30,5 @@ export default function App() {
   });
 
   // When dashboard page is built, place below along with nav
-  return <Navigation userID={userID} />;
+  return <Navigation />;
 }
