@@ -4,11 +4,7 @@ import { Outlet, Link } from "react-router-dom";
 import Container from "@layouts/container";
 import { navLinks } from "./routes";
 
-type NavigationProps = {
-  userID: string;
-};
-
-export default function Navigation({ userID }: NavigationProps) {
+export default function Navigation() {
   return (
     <>
       <Container id='main--container' styles={{ backgroundColor: "#071426" }}>
@@ -24,7 +20,7 @@ export default function Navigation({ userID }: NavigationProps) {
                 className={`${styles} pt-2 pb-2 flex flex-col items-center`}
                 data-testid={id}
               >
-                <Link to={`${href}/${userID}`}>
+                <Link to={href}>
                   <img src={icon} width='25' height='25' className='m-auto' />
                   {page}
                 </Link>
