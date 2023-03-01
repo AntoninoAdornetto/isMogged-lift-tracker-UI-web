@@ -5,6 +5,8 @@ import App from "@src/App";
 import Home from "@pages/home";
 import Login from "@pages/login";
 import Register from "@pages/register";
+import Dashboard from "@pages/dashboard";
+import Workout from "@pages/workout";
 import Exercise from "@pages/exercise";
 
 export const router = createBrowserRouter([
@@ -26,25 +28,29 @@ export const router = createBrowserRouter([
     errorElement: <div>Error</div>,
     children: [
       {
-        path: "/stats/:user_id",
+        path: "/stats",
         element: <div>Stats</div>,
       },
       {
-        path: "/log/:user_id",
+        path: "/log",
         element: <div>Logs</div>,
       },
       {
-        path: "/dashboard/:user_id",
-        element: <div>Dashboard</div>,
+        path: "/dashboard",
+        element: <Dashboard />,
       },
       {
-        path: "/exercise/:user_id",
+        path: "/exercise",
         element: <Exercise />,
       },
 
       {
-        path: "/progress/:user_id",
+        path: "/progress",
         element: <div>Progress</div>,
+      },
+      {
+        path: "/workout/:id",
+        element: <Workout />,
       },
     ],
   },
