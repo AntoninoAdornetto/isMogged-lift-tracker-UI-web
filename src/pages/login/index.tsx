@@ -15,7 +15,7 @@ import { handleHttpException } from "@utils/handleHttpException";
 export default function Login() {
   const toast = useRef<Toast>(null);
 
-  const login = useMutation(userLogin, {
+  const login = useMutation("userLogin", userLogin, {
     onError(err) {
       toast.current?.show({ severity: "error", detail: handleHttpException(err), life: 3000 });
     },
