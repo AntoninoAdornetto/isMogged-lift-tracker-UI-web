@@ -6,8 +6,8 @@ import Home from "@pages/home";
 import Login from "@pages/login";
 import Register from "@pages/register";
 import Dashboard from "@pages/dashboard";
-import Workout from "@pages/workout";
 import Exercise from "@pages/exercise";
+import Workout from "@pages/workout";
 
 export const router = createBrowserRouter([
   {
