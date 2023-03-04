@@ -95,45 +95,22 @@ export function WorkoutForm({ template = testTemplate }: WorkoutFormProps) {
     },
   });
 
-  const handleAddExercise = () => {};
+  const handleIncrementSetCount: React.MouseEventHandler<HTMLButtonElement> = (e) => {};
 
   const renderExercisesFromTemplate = () => {
     if (!template) return;
 
     return template.exercises.map((exercise, i) => {
-      // const currentExercise = workoutForm.values[exercise];
       return (
-        <LiftTable key={exercise} currentExercise={workoutForm.values[exercise]} id={exercise} />
+        <LiftTable
+          key={exercise}
+          currentExercise={workoutForm.values[exercise]}
+          id={exercise}
+          handleAddSet={handleIncrementSetCount}
+        />
       );
-      // return (
-      //   <div data-testid={exercise} id={exercise} key={exercise} className='mb-5'>
-      //     <DataTable
-      //       value={Array.from({ length: currentExercise.sets }, (_, n) => ({
-      //         set: n + 1,
-      //         weight: currentExercise.weight[n],
-      //         reps: currentExercise.reps[n],
-      //       }))}
-      //       header={<span>{exercise}</span>}
-      //       responsiveLayout='scroll'
-      //     >
-      //       <Column field='set' header='Set' />
-      //       <Column
-      //         field='weight'
-      //         header='lbs'
-      //         body={<InputNumber minFractionDigits={2} size={3} />}
-      //       />
-      //       <Column field='reps' header='Reps' />
-      //     </DataTable>
-      //   </div>
-      // );
     });
   };
-
-  const renderExercises = template ? (
-    template.exercises.map((t) => <span key={String(t)}>{t}</span>)
-  ) : (
-    <span></span>
-  );
 
   console.log(workoutForm.initialValues);
   console.log(produceDBQuery(workoutForm.initialValues));

@@ -4,13 +4,15 @@ import { exerciseSection } from "@pages/workout/forms/WorkoutForm";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputNumber } from "primereact/inputnumber";
+import { Button } from "primereact/button";
 
 type LiftTableProps = {
   currentExercise: exerciseSection;
   id: string;
+  handleAddSet: React.MouseEventHandler;
 };
 
-export function LiftTable({ currentExercise, id }: LiftTableProps) {
+export function LiftTable({ currentExercise, handleAddSet, id }: LiftTableProps) {
   return (
     <div data-testid={id} id={id} className='mb-5'>
       <DataTable
@@ -36,6 +38,9 @@ export function LiftTable({ currentExercise, id }: LiftTableProps) {
           header='Reps'
         />
       </DataTable>
+      <div className='flex justify-center items-center w-full pt-5'>
+        <Button id={id} label='Add Set' className='w-full' onClick={handleAddSet} />
+      </div>
     </div>
   );
 }
