@@ -7,7 +7,8 @@ import Login from "@pages/login";
 import Register from "@pages/register";
 import Dashboard from "@pages/dashboard";
 import Exercise from "@pages/exercise";
-import Workout from "@pages/workout";
+// import Workout from "@pages/workout";
+import Workout from "@pages/_workout";
 
 export const router = createBrowserRouter([
   {
@@ -49,7 +50,7 @@ export const router = createBrowserRouter([
         element: <div>Progress</div>,
       },
       {
-        path: "/workout/:id",
+        path: "/workout",
         element: <Workout />,
       },
     ],
