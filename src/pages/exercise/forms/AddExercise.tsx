@@ -8,20 +8,17 @@ import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 
 import { createExercise, listExercises } from "@services/exercise";
-import { listCategories } from "@services/category/listCategories";
-import { listMuscleGroups } from "@services/muscle_group";
+import { category } from "@services/category/listCategories";
+import { muscleGroup } from "@services/muscle_group";
 import { handleHttpException } from "@utils/handleHttpException";
 
-export default function AddExerciseForm() {
+type AddExerciseFormProps = {
+  muscleGroups: muscleGroup[];
+  categories: category[];
+};
+
+export default function AddExerciseForm({ categories, muscleGroups }: AddExerciseFormProps) {
   const toast = useRef<Toast>(null);
-
-  const { data: categories } = useQuery("listCategories", listCategories, {
-    enabled: false,
-  });
-
-  const { data: muscleGroups } = useQuery("listMuscleGroups", listMuscleGroups, {
-    enabled: false,
-  });
 
   const { refetch } = useQuery("listExercises", listExercises, {
     enabled: false,
