@@ -5,6 +5,7 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
 
 import { listMuscleGroups } from "@services/muscle_group/listMuscleGroups";
+import { listCategories } from "@services/category/listCategories";
 import AddExerciseForm from "@src/pages/exercise/forms/AddExercise";
 
 export type HeaderProps = {
@@ -21,7 +22,13 @@ export function Header({
   onMuscleGroupChange,
 }: HeaderProps) {
   const { data: muscleGroups } = useQuery("listMuscleGroups", listMuscleGroups, {
-    enabled: false,
+    enabled: true,
+    staleTime: Infinity,
+  });
+
+  const { data: categories } = useQuery("listCategories", listCategories, {
+    enabled: true,
+    staleTime: Infinity,
   });
 
   return (
@@ -55,9 +62,11 @@ export function Header({
             )}
           </div>
         </AccordionTab>
-        <AccordionTab header='Create'>
-          <AddExerciseForm />
-        </AccordionTab>
+        {muscleGroups && categories && (
+          <AccordionTab header='Create'>
+            <AddExerciseForm categories={categories} muscleGroups={muscleGroups} />
+          </AccordionTab>
+        )}
       </Accordion>
     </div>
   );
